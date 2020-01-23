@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using ChessClock.ViewModels;
 using Xamarin.Forms;
 
 namespace ChessClock
@@ -24,7 +25,7 @@ namespace ChessClock
         private bool _whiteTimerRun=true;
         private bool _blackTimerRun = true;
 
-        
+
 
         public int WhiteTimeSeconds
         {
@@ -81,11 +82,11 @@ namespace ChessClock
         public MainPage()
         {
             InitializeComponent();
-            WhiteTimeSeconds = 0;
-            WhiteTimeMinutes = 5;
 
-            BlackTimeSeconds = 0;
-            BlackTimeMinutes = 5;
+            
+            //WhiteTimeMinutes = 5;
+
+            
 
         }
 
@@ -93,6 +94,9 @@ namespace ChessClock
 
         private bool HandleWhiteTime()
         {
+
+            WhiteTimeMinutes = Int32.Parse(whiteMinuteLabel.Text);
+            WhiteTimeSeconds = Int32.Parse(whiteSecondLabel.Text);
             if (WhiteTimeSeconds == 0)
                 WhiteTimeSeconds = 60;
 
@@ -111,13 +115,21 @@ namespace ChessClock
             }
 
             if (_whiteTimerRun)
+            {
+                whiteMinuteLabel.Text = WhiteTimeMinutes.ToString();
+                whiteSecondLabel.Text = WhiteTimeSeconds.ToString();
+
                 return true;
+            }
+                
 
             return false;
         }
 
         private bool HandleBlackTime()
         {
+            BlackTimeMinutes = Int32.Parse(blackMinuteLabel.Text);
+            BlackTimeSeconds = Int32.Parse(blackSecondLabel.Text);
             if (BlackTimeSeconds == 0)
                 BlackTimeSeconds = 60;
 
@@ -136,7 +148,12 @@ namespace ChessClock
             }
 
             if (_blackTimerRun)
+            {
+                blackMinuteLabel.Text = BlackTimeMinutes.ToString();
+                blackSecondLabel.Text = BlackTimeSeconds.ToString();
                 return true;
+            }
+                
 
             return false;
         }
@@ -162,5 +179,9 @@ namespace ChessClock
             _whiteTimerRun = true;
         }
 
+        private void SettingsButton_OnClicked(object sender, EventArgs e)
+        {
+            Navigation.PushModalAsync(new SettingsPage());
+        }
     }
 }

@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="ChessClock.MainPage"
+             BindingContext="{StaticResource ClockViewModel}"
              x:Name="MyPage">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -24,14 +25,14 @@
                 <TapGestureRecognizer Tapped="OnWhite_Tapped"/>
             </Frame.GestureRecognizers>
             <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal">
-                <Label FontSize="Large" BindingContext="{x:Reference MyPage}" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding WhiteTimeMinutes}">
+                <Label x:Name="whiteMinuteLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding SelectedTimeControl.Limit}">
                     <!--<Label.Triggers>
                         <DataTrigger TargetType="Label" Binding="{Binding WhiteTimeMinutes}" Value="0">
                             <Setter Property="Text" Value="00"/>
                         </DataTrigger>
                     </Label.Triggers>-->
                 </Label>
-                <Label FontSize="Large" BindingContext="{x:Reference MyPage}" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding WhiteTimeSeconds}">
+                <Label x:Name="whiteSecondLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="00">
                     <!--<Label.Triggers>
                         <DataTrigger TargetType="Label" Binding="{Binding WhiteTimeSeconds}" Value="0">
                             <Setter Property="Text" Value="00"/>
@@ -44,24 +45,26 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Text="Pause" Grid.Column="0" VerticalOptions="Center"></Button>
-            <Button Text="Restart" Grid.Column="1" VerticalOptions="Center"></Button>
+            <Button Text="Settings" Grid.Column="0" VerticalOptions="Center" Clicked="SettingsButton_OnClicked"></Button>
+            <Button Text="Pause" Grid.Column="1" VerticalOptions="Center"></Button>
+            <Button Text="Restart" Grid.Column="2" VerticalOptions="Center"></Button>
         </Grid>
         <Frame Grid.Row="2" BackgroundColor="Beige" CornerRadius="10" x:Name="BlackFrame">
             <Frame.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnBlack_Tapped"/>
             </Frame.GestureRecognizers>
             <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal">
-                <Label FontSize="Large" BindingContext="{x:Reference MyPage}" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding BlackTimeMinutes}">
+                <Label x:Name="blackMinuteLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding SelectedTimeControl.Limit}">
                     <!--<Label.Triggers>
                         <DataTrigger TargetType="Label" Binding="{Binding BlackTimeMinutes}" Value="0">
                             <Setter Property="Text" Value="00"/>
                         </DataTrigger>
                     </Label.Triggers>-->
                 </Label>
-                <Label FontSize="Large" BindingContext="{x:Reference MyPage}" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding BlackTimeSeconds}">
+                <Label x:Name="blackSecondLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="00">
                     <!--<Label.Triggers>
                         <DataTrigger TargetType="Label" Binding="{Binding BlackTimeSeconds}" Value="0">
                             <Setter Property="Text" Value="00"/>

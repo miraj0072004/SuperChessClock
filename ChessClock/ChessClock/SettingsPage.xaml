@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:input="clr-namespace:Plugin.InputKit.Shared.Controls;assembly=Plugin.InputKit"
+             mc:Ignorable="d"
+             BindingContext="{StaticResource ClockViewModel}"
+             x:Class="ChessClock.SettingsPage">
+
+    <ContentPage.Content>
+
+
+        <StackLayout>
+            <input:RadioButtonGroupView VerticalOptions="FillAndExpand">
+                <input:RadioButton Text="{Binding TimeControls[0].Limit}"  ClickCommand="{Binding SelectTimeControlCommand}" CommandParameter="{Binding TimeControls[0].Index}" VerticalOptions="CenterAndExpand"/>
+                <input:RadioButton Text="{Binding TimeControls[1].Limit}"  ClickCommand="{Binding SelectTimeControlCommand}" CommandParameter="{Binding TimeControls[1].Index}" VerticalOptions="CenterAndExpand"/>
+                <input:RadioButton Text="{Binding TimeControls[2].Limit}"  ClickCommand="{Binding SelectTimeControlCommand}" CommandParameter="{Binding TimeControls[2].Index}" VerticalOptions="CenterAndExpand"/>
+            </input:RadioButtonGroupView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
