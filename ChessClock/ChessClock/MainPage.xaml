@@ -20,19 +20,19 @@
             <RowDefinition Height="3*"/>
             <RowDefinition Height="5*"/>
         </Grid.RowDefinitions>
-        <Frame Grid.Row="0" BackgroundColor="Beige" CornerRadius="20" x:Name="WhiteFrame">
+        <Frame Grid.Row="0" BackgroundColor="{Binding WhiteBackgroundColor}" IsEnabled="{Binding WhiteIsEnabled}" CornerRadius="20" x:Name="WhiteFrame">
             <Frame.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnWhite_Tapped"/>
+                <TapGestureRecognizer Command="{Binding OnWhiteTappedCommand}"/>
             </Frame.GestureRecognizers>
             <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal">
-                <Label x:Name="whiteMinuteLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding SelectedTimeControl.Limit}">
+                <Label x:Name="whiteMinuteLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding WhiteTimeMinutes}">
                     <!--<Label.Triggers>
                         <DataTrigger TargetType="Label" Binding="{Binding WhiteTimeMinutes}" Value="0">
                             <Setter Property="Text" Value="00"/>
                         </DataTrigger>
                     </Label.Triggers>-->
                 </Label>
-                <Label x:Name="whiteSecondLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="00">
+                <Label x:Name="whiteSecondLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding WhiteTimeSeconds}">
                     <!--<Label.Triggers>
                         <DataTrigger TargetType="Label" Binding="{Binding WhiteTimeSeconds}" Value="0">
                             <Setter Property="Text" Value="00"/>
@@ -52,19 +52,19 @@
             <Button Text="Pause" Grid.Column="1" VerticalOptions="Center"></Button>
             <Button Text="Restart" Grid.Column="2" VerticalOptions="Center"></Button>
         </Grid>
-        <Frame Grid.Row="2" BackgroundColor="Beige" CornerRadius="10" x:Name="BlackFrame">
+        <Frame Grid.Row="2" BackgroundColor="{Binding BlackBackgroundColor}" IsEnabled="{Binding BlackIsEnabled}" CornerRadius="10" x:Name="BlackFrame">
             <Frame.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnBlack_Tapped"/>
+                <TapGestureRecognizer Command="{Binding OnBlackTappedCommand}"/>
             </Frame.GestureRecognizers>
             <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal">
-                <Label x:Name="blackMinuteLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding SelectedTimeControl.Limit}">
+                <Label x:Name="blackMinuteLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding BlackTimeMinutes}">
                     <!--<Label.Triggers>
                         <DataTrigger TargetType="Label" Binding="{Binding BlackTimeMinutes}" Value="0">
                             <Setter Property="Text" Value="00"/>
                         </DataTrigger>
                     </Label.Triggers>-->
                 </Label>
-                <Label x:Name="blackSecondLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="00">
+                <Label x:Name="blackSecondLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding BlackTimeSeconds}">
                     <!--<Label.Triggers>
                         <DataTrigger TargetType="Label" Binding="{Binding BlackTimeSeconds}" Value="0">
                             <Setter Property="Text" Value="00"/>

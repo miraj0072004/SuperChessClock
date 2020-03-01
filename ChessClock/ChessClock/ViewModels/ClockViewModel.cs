@@ -15,6 +15,8 @@ namespace ChessClock.ViewModels
         public int Index { get; set; }
         public int Limit { get; set; }
         public int Increment { get; set; }
+
+
     }
 
 
@@ -23,6 +25,210 @@ namespace ChessClock.ViewModels
     {
         private TimeControl _selectedTimeControl;
         private List<TimeControl> _timeControls;
+        private bool _reset;
+        private int _whiteTimeSeconds;
+        private int _whiteTimeMinutes;
+        private int _whiteTimeHours;
+        private int _blackTimeSeconds;
+        private int _blackTimeMinutes;
+        private int _blackTimeHours;
+        private bool _whiteTimerRun = true;
+        private bool _blackTimerRun = true;
+        private Color _blackBackgroundColor;
+        private bool _blackIsEnabled;
+        private bool _whiteIsEnabled;
+        private Color _whiteBackgroundColor;
+
+
+        public int WhiteTimeSeconds
+        {
+            get => _whiteTimeSeconds;
+            set
+            {
+                _whiteTimeSeconds = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int WhiteTimeMinutes
+        {
+            get => _whiteTimeMinutes;
+            set
+            {
+                _whiteTimeMinutes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int WhiteTimeHours
+        {
+            get => _whiteTimeHours;
+            set => _whiteTimeHours = value;
+        }
+
+        public int BlackTimeSeconds
+        {
+            get => _blackTimeSeconds;
+            set
+            {
+                _blackTimeSeconds = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int BlackTimeMinutes
+        {
+            get => _blackTimeMinutes;
+            set
+            {
+                _blackTimeMinutes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int BlackTimeHours
+        {
+            get => _blackTimeHours;
+            set
+            {
+                _blackTimeHours = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Color BlackBackgroundColor
+        {
+            get => _blackBackgroundColor;
+            set
+            {
+                _blackBackgroundColor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool BlackIsEnabled
+        {
+            get => _blackIsEnabled;
+            set
+            {
+                _blackIsEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool WhiteIsEnabled
+        {
+            get => _whiteIsEnabled;
+            set
+            {
+                _whiteIsEnabled = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Color WhiteBackgroundColor
+        {
+            get => _whiteBackgroundColor;
+            set
+            {
+                _whiteBackgroundColor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool HandleWhiteTime()
+        {
+            if (Reset)
+                return false;
+            
+            if (WhiteTimeSeconds == 0)
+                WhiteTimeSeconds = 60;
+
+            WhiteTimeSeconds--;
+
+            if (WhiteTimeSeconds == 59)
+            {
+                WhiteTimeMinutes--;
+            }
+
+            if (WhiteTimeMinutes == 0)
+            {
+                //return new Task<false>;
+                return false;
+
+            }
+
+            if (_whiteTimerRun)
+            {
+
+                return true;
+            }
+
+
+            return false;
+        }
+
+        private bool HandleBlackTime()
+        {
+
+            if (Reset)
+                return false;
+
+            if (BlackTimeSeconds == 0)
+                BlackTimeSeconds = 60;
+
+            BlackTimeSeconds--;
+
+            if (BlackTimeSeconds == 59)
+            {
+                BlackTimeMinutes--;
+            }
+
+            if (BlackTimeMinutes == 0)
+            {
+                //return new Task<false>;
+                return false;
+
+            }
+
+            if (_blackTimerRun)
+            {
+                return true;
+            }
+
+
+            return false;
+        }
+
+        private void OnWhite_Tapped()
+        {
+            Device.StartTimer(TimeSpan.FromSeconds(1), HandleBlackTime);
+            WhiteBackgroundColor = Color.Bisque;
+            WhiteIsEnabled = false;
+            BlackIsEnabled = true;
+            BlackBackgroundColor = Color.Beige;
+            _whiteTimerRun = false;
+            _blackTimerRun = true;
+        }
+
+
+
+        private void OnBlack_Tapped()
+        {
+            Device.StartTimer(TimeSpan.FromSeconds(1), HandleWhiteTime);
+            BlackBackgroundColor = Color.Bisque;
+            WhiteBackgroundColor = Color.Beige;
+            BlackIsEnabled = false;
+            WhiteIsEnabled = true;
+            _blackTimerRun = false;
+            _whiteTimerRun = true;
+        }
+
+        public bool Reset
+        {
+            get => _reset;
+            set => _reset = value;
+        }
 
 
         public List<TimeControl> TimeControls
@@ -48,7 +254,12 @@ namespace ChessClock.ViewModels
             }
         }
 
-        public ICommand SelectTimeControlCommand { get; set; }
+        public ICommand SelectTimeControlCommand { private set; get; }
+        public ICommand ResetTimeCommand { private set; get; }
+
+        public ICommand OnBlackTappedCommand { get; set; }
+        public ICommand OnWhiteTappedCommand { get; set; }
+
 
 
 
@@ -78,6 +289,16 @@ namespace ChessClock.ViewModels
 
             SelectedTimeControl = TimeControls[0];
 
+            WhiteTimeMinutes = SelectedTimeControl.Limit;
+            WhiteTimeSeconds = 0;
+            BlackTimeMinutes = SelectedTimeControl.Limit;
+            BlackTimeSeconds = 0;
+            BlackBackgroundColor=Color.Beige;
+            WhiteBackgroundColor=Color.Beige;
+            WhiteIsEnabled = true;
+            BlackIsEnabled = true;
+            Reset = false;
+
 
 
             SelectTimeControlCommand = new Command(
@@ -85,7 +306,24 @@ namespace ChessClock.ViewModels
 
                 );
 
+            ResetTimeCommand= new Command(
+                () =>
+                {
+                    WhiteTimeMinutes = SelectedTimeControl.Limit;
+                    WhiteTimeSeconds = 0;
+
+                    BlackTimeMinutes = SelectedTimeControl.Limit;
+                    BlackTimeSeconds = 0;
+
+                    Reset = true;
+                });
+
+            OnWhiteTappedCommand= new Command(()=>OnWhite_Tapped());
+            OnBlackTappedCommand = new Command(() => OnBlack_Tapped());
+
         }
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
