@@ -49,7 +49,13 @@
             </Grid.ColumnDefinitions>
 
             <Button Text="Settings" Grid.Column="0" VerticalOptions="Center" Clicked="SettingsButton_OnClicked"></Button>
-            <Button Text="Pause" Grid.Column="1" VerticalOptions="Center"></Button>
+            <Button Text="Pause" Grid.Column="1" VerticalOptions="Center" Command="{Binding PauseTimeCommand}">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding Pause}" Value="true">
+                        <Setter Property="IsEnabled" Value="false"></Setter>
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
             <Button Text="Restart" Grid.Column="2" VerticalOptions="Center"></Button>
         </Grid>
         <Frame Grid.Row="2" BackgroundColor="{Binding BlackBackgroundColor}" IsEnabled="{Binding BlackIsEnabled}" CornerRadius="10" x:Name="BlackFrame">

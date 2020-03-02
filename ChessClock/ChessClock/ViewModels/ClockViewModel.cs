@@ -23,6 +23,7 @@ namespace ChessClock.ViewModels
 
     class ClockViewModel :INotifyPropertyChanged
     {
+        #region Backing Fields
         private TimeControl _selectedTimeControl;
         private List<TimeControl> _timeControls;
         private bool _reset;
@@ -38,8 +39,11 @@ namespace ChessClock.ViewModels
         private bool _blackIsEnabled;
         private bool _whiteIsEnabled;
         private Color _whiteBackgroundColor;
+        private bool _pause;
 
+        #endregion
 
+        #region Properties
         public int WhiteTimeSeconds
         {
             get => _whiteTimeSeconds;
@@ -136,11 +140,53 @@ namespace ChessClock.ViewModels
             }
         }
 
+        public List<TimeControl> TimeControls
+        {
+            get
+            {
+                return _timeControls;
+            }
+            set { _timeControls = value; }
+        }
+
+        public TimeControl SelectedTimeControl
+        {
+            get
+            {
+                return _selectedTimeControl;
+            }
+            set
+            {
+                _selectedTimeControl = value;
+                OnPropertyChanged();
+
+            }
+        }
+
+        public bool Reset
+        {
+            get => _reset;
+            set => _reset = value;
+        }
+
+        public bool Pause
+        {
+            get => _pause;
+            set
+            {
+                _pause = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion
+
+        #region Methods
         private bool HandleWhiteTime()
         {
-            if (Reset)
+            if (Reset || Pause)
                 return false;
-            
+
             if (WhiteTimeSeconds == 0)
                 WhiteTimeSeconds = 60;
 
@@ -171,7 +217,7 @@ namespace ChessClock.ViewModels
         private bool HandleBlackTime()
         {
 
-            if (Reset)
+            if (Reset || Pause)
                 return false;
 
             if (BlackTimeSeconds == 0)
@@ -202,6 +248,8 @@ namespace ChessClock.ViewModels
 
         private void OnWhite_Tapped()
         {
+            Pause = false;
+            Reset = false;
             Device.StartTimer(TimeSpan.FromSeconds(1), HandleBlackTime);
             WhiteBackgroundColor = Color.Bisque;
             WhiteIsEnabled = false;
@@ -211,10 +259,10 @@ namespace ChessClock.ViewModels
             _blackTimerRun = true;
         }
 
-
-
         private void OnBlack_Tapped()
         {
+            Pause = false;
+            Reset = false;
             Device.StartTimer(TimeSpan.FromSeconds(1), HandleWhiteTime);
             BlackBackgroundColor = Color.Bisque;
             WhiteBackgroundColor = Color.Beige;
@@ -224,45 +272,19 @@ namespace ChessClock.ViewModels
             _whiteTimerRun = true;
         }
 
-        public bool Reset
-        {
-            get => _reset;
-            set => _reset = value;
-        }
 
+        #endregion
 
-        public List<TimeControl> TimeControls
-        {
-            get
-            {
-                return _timeControls;
-            }
-            set { _timeControls = value; }
-        }
-        
-        public TimeControl SelectedTimeControl
-        {
-            get
-            {
-                return _selectedTimeControl;
-            }
-            set
-            {
-                _selectedTimeControl = value;
-                OnPropertyChanged();
-
-            }
-        }
+        #region Commands
 
         public ICommand SelectTimeControlCommand { private set; get; }
         public ICommand ResetTimeCommand { private set; get; }
-
+        public ICommand PauseTimeCommand { private set; get; }
         public ICommand OnBlackTappedCommand { get; set; }
         public ICommand OnWhiteTappedCommand { get; set; }
+        #endregion
 
-
-
-
+        #region Constructor
         public ClockViewModel()
         {
             TimeControls = new List<TimeControl>()
@@ -293,20 +315,20 @@ namespace ChessClock.ViewModels
             WhiteTimeSeconds = 0;
             BlackTimeMinutes = SelectedTimeControl.Limit;
             BlackTimeSeconds = 0;
-            BlackBackgroundColor=Color.Beige;
-            WhiteBackgroundColor=Color.Beige;
+            BlackBackgroundColor = Color.Beige;
+            WhiteBackgroundColor = Color.Beige;
             WhiteIsEnabled = true;
             BlackIsEnabled = true;
             Reset = false;
-
+            Pause = false;
 
 
             SelectTimeControlCommand = new Command(
-                (chosenTimeControl) => { SelectedTimeControl = this.TimeControls.First(x=>x.Index==Int32.Parse(chosenTimeControl.ToString())); }
+                (chosenTimeControl) => { SelectedTimeControl = this.TimeControls.First(x => x.Index == Int32.Parse(chosenTimeControl.ToString())); }
 
                 );
 
-            ResetTimeCommand= new Command(
+            ResetTimeCommand = new Command(
                 () =>
                 {
                     WhiteTimeMinutes = SelectedTimeControl.Limit;
@@ -318,11 +340,22 @@ namespace ChessClock.ViewModels
                     Reset = true;
                 });
 
-            OnWhiteTappedCommand= new Command(()=>OnWhite_Tapped());
+            PauseTimeCommand= new Command(
+                () =>
+                {
+                    Pause = true;
+                    WhiteBackgroundColor=Color.Aquamarine;
+                    BlackBackgroundColor=Color.Aquamarine;
+                    WhiteIsEnabled = true;
+                    BlackIsEnabled = true;
+                });
+
+            OnWhiteTappedCommand = new Command(() => OnWhite_Tapped());
             OnBlackTappedCommand = new Command(() => OnBlack_Tapped());
 
         }
 
+        #endregion
 
 
         public event PropertyChangedEventHandler PropertyChanged;
