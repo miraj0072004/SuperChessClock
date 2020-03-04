@@ -250,26 +250,28 @@ namespace ChessClock.ViewModels
         {
             Pause = false;
             Reset = false;
-            Device.StartTimer(TimeSpan.FromSeconds(1), HandleBlackTime);
+            
             WhiteBackgroundColor = Color.Bisque;
             WhiteIsEnabled = false;
             BlackIsEnabled = true;
             BlackBackgroundColor = Color.Beige;
             _whiteTimerRun = false;
             _blackTimerRun = true;
+            Device.StartTimer(TimeSpan.FromSeconds(1), HandleBlackTime);
         }
 
         private void OnBlack_Tapped()
         {
             Pause = false;
             Reset = false;
-            Device.StartTimer(TimeSpan.FromSeconds(1), HandleWhiteTime);
+            
             BlackBackgroundColor = Color.Bisque;
             WhiteBackgroundColor = Color.Beige;
             BlackIsEnabled = false;
             WhiteIsEnabled = true;
             _blackTimerRun = false;
             _whiteTimerRun = true;
+            Device.StartTimer(TimeSpan.FromSeconds(1), HandleWhiteTime);
         }
 
 
@@ -320,7 +322,7 @@ namespace ChessClock.ViewModels
             WhiteIsEnabled = true;
             BlackIsEnabled = true;
             Reset = false;
-            Pause = false;
+            Pause = true;
 
 
             SelectTimeControlCommand = new Command(
@@ -337,6 +339,12 @@ namespace ChessClock.ViewModels
                     BlackTimeMinutes = SelectedTimeControl.Limit;
                     BlackTimeSeconds = 0;
 
+                    WhiteBackgroundColor=Color.Beige;
+                    BlackBackgroundColor=Color.Beige;
+                    WhiteIsEnabled = true;
+                    BlackIsEnabled = true;
+
+                    Pause = true;
                     Reset = true;
                 });
 

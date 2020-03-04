@@ -56,7 +56,7 @@
                     </DataTrigger>
                 </Button.Triggers>
             </Button>
-            <Button Text="Restart" Grid.Column="2" VerticalOptions="Center"></Button>
+            <Button Text="Restart" Grid.Column="2" VerticalOptions="Center" Command="{Binding ResetTimeCommand}"></Button>
         </Grid>
         <Frame Grid.Row="2" BackgroundColor="{Binding BlackBackgroundColor}" IsEnabled="{Binding BlackIsEnabled}" CornerRadius="10" x:Name="BlackFrame">
             <Frame.GestureRecognizers>
