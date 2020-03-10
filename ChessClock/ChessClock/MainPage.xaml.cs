@@ -21,18 +21,7 @@ namespace ChessClock
         public MainPage()
         {
             InitializeComponent();
-
-            
-            //WhiteTimeMinutes = 5;
-
-            
-
         }
-
-        
-
-        
-
         private void SettingsButton_OnClicked(object sender, EventArgs e)
         {
             Navigation.PushModalAsync(new SettingsPage());

@@ -16,5 +16,10 @@ namespace ChessClock
         {
             InitializeComponent();
         }
+
+        private void SetButton_OnClicked(object sender, EventArgs e)
+        {
+            Navigation.PopModalAsync();
+        }
     }
 }
