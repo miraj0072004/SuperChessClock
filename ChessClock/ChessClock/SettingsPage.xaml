@@ -9,21 +9,25 @@
              x:Class="ChessClock.SettingsPage">
 
     <ContentPage.Content>
-        <Grid>
+        <Grid Padding="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="8*"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
             <StackLayout Grid.Row="0">
                 <input:RadioButtonGroupView VerticalOptions="FillAndExpand" SelectedIndex="{Binding SelectedTimeControl.Index}">
-                    <input:RadioButton Text="{Binding TimeControls[0].Limit}"  ClickCommand="{Binding SelectTimeControlCommand}" CommandParameter="{Binding TimeControls[0].Index}" VerticalOptions="CenterAndExpand"/>
-                    <input:RadioButton Text="{Binding TimeControls[1].Limit}"  ClickCommand="{Binding SelectTimeControlCommand}" CommandParameter="{Binding TimeControls[1].Index}" VerticalOptions="CenterAndExpand"/>
-                    <input:RadioButton Text="{Binding TimeControls[2].Limit}"  ClickCommand="{Binding SelectTimeControlCommand}" CommandParameter="{Binding TimeControls[2].Index}" VerticalOptions="CenterAndExpand"/>
+                    <input:RadioButton Text="{Binding TimeControls[0].Description}"  ClickCommand="{Binding SelectTimeControlCommand}" CommandParameter="{Binding TimeControls[0].Index}" VerticalOptions="CenterAndExpand"/>
+                    <input:RadioButton Text="{Binding TimeControls[1].Description}"  ClickCommand="{Binding SelectTimeControlCommand}" CommandParameter="{Binding TimeControls[1].Index}" VerticalOptions="CenterAndExpand"/>
+                    <input:RadioButton Text="{Binding TimeControls[2].Description}"  ClickCommand="{Binding SelectTimeControlCommand}" CommandParameter="{Binding TimeControls[2].Index}" VerticalOptions="CenterAndExpand"/>
+                    <input:RadioButton Text="{Binding TimeControls[3].Description}"  ClickCommand="{Binding SelectTimeControlCommand}" CommandParameter="{Binding TimeControls[3].Index}" VerticalOptions="CenterAndExpand"/>
+                    <input:RadioButton Text="{Binding TimeControls[4].Description}"  ClickCommand="{Binding SelectTimeControlCommand}" CommandParameter="{Binding TimeControls[4].Index}" VerticalOptions="CenterAndExpand"/>
+                    <input:RadioButton Text="{Binding TimeControls[5].Description}"  ClickCommand="{Binding SelectTimeControlCommand}" CommandParameter="{Binding TimeControls[5].Index}" VerticalOptions="CenterAndExpand"/>
+                    <input:RadioButton Text="{Binding TimeControls[6].Description}"  ClickCommand="{Binding SelectTimeControlCommand}" CommandParameter="{Binding TimeControls[6].Index}" VerticalOptions="CenterAndExpand"/>
                 </input:RadioButtonGroupView>
             </StackLayout>
 
-            <Button Grid.Row="1" HorizontalOptions="Center" Text="Set" Clicked="SetButton_OnClicked"></Button>
+            <Button Grid.Row="1" HorizontalOptions="Center" Text="Set" BackgroundColor="BurlyWood" VerticalOptions="Center" Clicked="SetButton_OnClicked"></Button>
         </Grid>
 
         

@@ -27,12 +27,12 @@
             <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal">
                 <Label x:Name="whiteMinuteLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding WhiteTimeMinutes}">
                     <!--<Label.Triggers>
-                        <DataTrigger TargetType="Label" Binding="{Binding WhiteTimeMinutes}" Value="0">
+                        <Trigger TargetType="Label" Property="Text" Value="0">
                             <Setter Property="Text" Value="00"/>
-                        </DataTrigger>
+                        </Trigger>
                     </Label.Triggers>-->
                 </Label>
-                <Label x:Name="whiteSecondLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding WhiteTimeSeconds}">
+                <Label x:Name="whiteSecondLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding WhiteTimeSecondsShow}">
                     <!--<Label.Triggers>
                         <DataTrigger TargetType="Label" Binding="{Binding WhiteTimeSeconds}" Value="0">
                             <Setter Property="Text" Value="00"/>
@@ -70,7 +70,7 @@
                         </DataTrigger>
                     </Label.Triggers>-->
                 </Label>
-                <Label x:Name="blackSecondLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding BlackTimeSeconds}">
+                <Label x:Name="blackSecondLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding BlackTimeSecondsShow}">
                     <!--<Label.Triggers>
                         <DataTrigger TargetType="Label" Binding="{Binding BlackTimeSeconds}" Value="0">
                             <Setter Property="Text" Value="00"/>

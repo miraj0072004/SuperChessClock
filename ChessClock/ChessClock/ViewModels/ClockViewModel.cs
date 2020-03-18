@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using JetBrains.Annotations;
 using Xamarin.Forms;
@@ -15,6 +16,7 @@ namespace ChessClock.ViewModels
         public int Index { get; set; }
         public int Limit { get; set; }
         public int Increment { get; set; }
+        public string Description { get; set; }
 
 
     }
@@ -40,16 +42,45 @@ namespace ChessClock.ViewModels
         private bool _whiteIsEnabled;
         private Color _whiteBackgroundColor;
         private bool _pause;
+        private string _whiteTimeSecondsShow;
+        private string _blackTimeSecondsShow;
 
         #endregion
 
         #region Properties
+
+        private int blackTimeProgress = 0;
+        private int whiteTimeProgress = 0;
         public int WhiteTimeSeconds
         {
             get => _whiteTimeSeconds;
             set
             {
                 _whiteTimeSeconds = value;
+
+                //WhiteTimeSecondsShow = (_whiteTimeSeconds==0 || _whiteTimeSeconds == 60) ? "00" : _whiteTimeSeconds.ToString();
+
+                OnPropertyChanged();
+            }
+        }
+
+        public string WhiteTimeSecondsShow
+        {
+            get => _whiteTimeSecondsShow;
+            set
+            {
+                _whiteTimeSecondsShow = value;
+                OnPropertyChanged();
+            } 
+        }
+
+        public string BlackTimeSecondsShow
+        {
+            get => _blackTimeSecondsShow;
+            set
+            {
+                _blackTimeSecondsShow = value;
+                //BlackTimeSecondsShow = (_blackTimeSeconds == 0 || _blackTimeSeconds == 60) ? "00" : _blackTimeSeconds.ToString();
                 OnPropertyChanged();
             }
         }
@@ -185,66 +216,105 @@ namespace ChessClock.ViewModels
         #region Methods
         private bool HandleWhiteTime()
         {
-            if (Reset || Pause)
-                return false;
-
-            if (WhiteTimeSeconds == 0)
-                WhiteTimeSeconds = 60;
-
-            WhiteTimeSeconds--;
-
-            if (WhiteTimeSeconds == 59)
+            whiteTimeProgress ++;
+            if (!_whiteTimerRun || Reset || Pause) 
             {
-                WhiteTimeMinutes--;
+                
+                return false;
+                
             }
 
-            if (WhiteTimeMinutes == 0)
+            if (whiteTimeProgress==10)
             {
-                //return new Task<false>;
-                return false;
+                
 
-            }
+                if (WhiteTimeMinutes == 0 && WhiteTimeSeconds == 0)
+                {
+                    //return new Task<false>;
+                    whiteTimeProgress = 0;
+                    return false;
 
-            if (_whiteTimerRun)
-            {
+                }
 
+                WhiteTimeSeconds--;
+                if (WhiteTimeSeconds == 0)
+                {
+                    WhiteTimeSeconds = 60;
+                    WhiteTimeSecondsShow = "00";
+                }
+                else if(WhiteTimeSeconds<10)
+                {
+                    WhiteTimeSecondsShow = "0"+WhiteTimeSeconds;
+                }
+                else
+                {
+                    WhiteTimeSecondsShow = WhiteTimeSeconds.ToString();
+                }
+
+                if (WhiteTimeSeconds == 59)
+                {
+                    WhiteTimeMinutes--;
+                }
+
+                whiteTimeProgress = 0;
                 return true;
+
             }
 
-
-            return false;
+            
+            return true;
         }
 
         private bool HandleBlackTime()
         {
-
-            if (Reset || Pause)
-                return false;
-
-            if (BlackTimeSeconds == 0)
-                BlackTimeSeconds = 60;
-
-            BlackTimeSeconds--;
-
-            if (BlackTimeSeconds == 59)
+            blackTimeProgress ++;
+            if (!_blackTimerRun || Reset || Pause)
             {
-                BlackTimeMinutes--;
-            }
-
-            if (BlackTimeMinutes == 0)
-            {
-                //return new Task<false>;
+                blackTimeProgress = 0;
                 return false;
+                
 
             }
 
-            if (_blackTimerRun)
+            if (blackTimeProgress == 10)
             {
+
+
+                if (BlackTimeMinutes == 0 && BlackTimeSeconds == 0)
+                {
+                    //return new Task<false>;
+                    blackTimeProgress = 0;
+                    return false;
+
+                }
+
+                BlackTimeSeconds--;
+                if (BlackTimeSeconds == 0)
+                {
+                    BlackTimeSeconds = 60;
+                    BlackTimeSecondsShow = "00";
+                }
+                else if (BlackTimeSeconds<10)
+                {
+                    BlackTimeSecondsShow = "0"+BlackTimeSeconds;
+                }
+                else
+                {
+                    BlackTimeSecondsShow = BlackTimeSeconds.ToString();
+                }
+
+                if (BlackTimeSeconds == 59)
+                {
+                    BlackTimeMinutes--;
+                }
+
+                blackTimeProgress = 0;
                 return true;
+
             }
 
-
-            return false;
+            
+            return true;
         }
 
         private void OnWhite_Tapped()
@@ -258,7 +328,16 @@ namespace ChessClock.ViewModels
             BlackBackgroundColor = Color.Beige;
             _whiteTimerRun = false;
             _blackTimerRun = true;
-            Device.StartTimer(TimeSpan.FromSeconds(1), HandleBlackTime);
+            //Device.StartTimer(TimeSpan.FromMilliseconds(100), () =>
+            //{
+            //    Task.Run(async () =>
+            //    {
+            //        var time = await HandleBlackTime();
+
+            //    });
+            //    return true;
+            //});
+            Device.StartTimer(TimeSpan.FromMilliseconds(100),HandleBlackTime );
         }
 
         private void OnBlack_Tapped()
@@ -272,7 +351,16 @@ namespace ChessClock.ViewModels
             WhiteIsEnabled = true;
             _blackTimerRun = false;
             _whiteTimerRun = true;
-            Device.StartTimer(TimeSpan.FromSeconds(1), HandleWhiteTime);
+            //Device.StartTimer(TimeSpan.FromMilliseconds(100), () =>
+            //{
+            //    Task.Run(async () =>
+            //    {
+            //        var time = await HandleWhiteTime();
+
+            //    });
+            //    return true;
+            //});
+            Device.StartTimer(TimeSpan.FromMilliseconds(100), HandleWhiteTime);
         }
 
 
@@ -295,29 +383,62 @@ namespace ChessClock.ViewModels
                 new TimeControl
                 {
                     Index = 0,
-                    Limit = 3,
-                    Increment = 2
+                    Limit = 1,
+                    Increment = 0,
+                    Description = "Bullet 1|0"
                 },
                 new TimeControl
                 {
                     Index = 1,
-                    Limit = 5,
-                    Increment = 3
+                    Limit = 3,
+                    Increment = 0,
+                    Description = "Blitz 3|0"
                 },
                 new TimeControl
                 {
                     Index = 2,
+                    Limit = 5,
+                    Increment = 0,
+                    Description = "Blitz 5|0"
+                },
+                new TimeControl
+                {
+                    Index = 3,
                     Limit = 10,
-                    Increment = 0
+                    Increment = 0,
+                    Description = "Rapid 15|0"
+                },
+                new TimeControl
+                {
+                    Index = 4,
+                    Limit = 3,
+                    Increment = 2,
+                    Description = "Blitz 3|2"
+                },
+                new TimeControl
+                {
+                    Index = 5,
+                    Limit = 5,
+                    Increment = 5,
+                    Description = "Blitz 5|5"
+                },
+                new TimeControl
+                {
+                    Index = 6,
+                    Limit = 15,
+                    Increment = 10,
+                    Description = "Rapid 15|10"
                 }
             };
 
             SelectedTimeControl = TimeControls[0];
 
             WhiteTimeMinutes = SelectedTimeControl.Limit;
-            WhiteTimeSeconds = 0;
+            WhiteTimeSeconds = 60;
+            WhiteTimeSecondsShow = "00";
             BlackTimeMinutes = SelectedTimeControl.Limit;
-            BlackTimeSeconds = 0;
+            BlackTimeSeconds = 60;
+            BlackTimeSecondsShow = "00";
             BlackBackgroundColor = Color.Beige;
             WhiteBackgroundColor = Color.Beige;
             WhiteIsEnabled = true;
@@ -352,10 +473,16 @@ namespace ChessClock.ViewModels
         private void ResetTime()
         {
             WhiteTimeMinutes = SelectedTimeControl.Limit;
-            WhiteTimeSeconds = 0;
+            WhiteTimeSeconds = 60;
+            whiteTimeProgress = 0;
+            WhiteTimeSecondsShow = "00";
+            
 
             BlackTimeMinutes = SelectedTimeControl.Limit;
-            BlackTimeSeconds = 0;
+            BlackTimeSeconds = 60;
+            blackTimeProgress = 0;
+            BlackTimeSecondsShow = "00";
+            
 
             WhiteBackgroundColor = Color.Beige;
             BlackBackgroundColor = Color.Beige;
