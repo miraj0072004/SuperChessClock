@@ -49,8 +49,87 @@ namespace ChessClock.ViewModels
 
         #region Properties
 
+        private readonly Color nonCountDownRunningColor = Color.Beige;
+        private readonly Color nonCountDownClickedColor = Color.Bisque;
+        private readonly Color countDownRunningColor = Color.OrangeRed;
+        private readonly Color countDownClickedColor = Color.Chocolate;
+
+        public bool BlackFinalCountDown
+        {
+            get => _blackFinalCountDown;
+            private set
+            {
+                _blackFinalCountDown = value;
+                if (_blackFinalCountDown)
+                {
+                    if (_blackTimerRun)
+                    {
+                        BlackBackgroundColor = countDownRunningColor;
+                    }
+                    else
+                    {
+                        BlackBackgroundColor = countDownClickedColor;
+                    }
+                }
+                else
+                {
+                    if (_blackTimerRun)
+                    {
+                        BlackBackgroundColor = nonCountDownRunningColor;
+                    }
+                    else
+                    {
+                        BlackBackgroundColor = nonCountDownClickedColor;
+                    }
+                }
+            }
+        }
+
+        public bool WhiteFinalCountDown
+        {
+            get => _whiteFinalCountDown;
+            private set
+            {
+                _whiteFinalCountDown = value;
+                if (_whiteFinalCountDown)
+                {
+                    if (_whiteTimerRun)
+                    {
+                        WhiteBackgroundColor = countDownRunningColor;
+                    }
+                    else
+                    {
+                        WhiteBackgroundColor = countDownClickedColor;
+                    }
+                }
+                else
+                {
+                    if (_whiteTimerRun)
+                    {
+                        WhiteBackgroundColor = nonCountDownRunningColor;
+                    }
+                    else
+                    {
+                        WhiteBackgroundColor = nonCountDownClickedColor;
+                    }
+                }
+                
+            }
+        }
+
         private int blackTimeProgress = 0;
         private int whiteTimeProgress = 0;
+        private int _increment;
+        private bool _whiteFinalCountDown;
+        private bool _blackFinalCountDown;
+
+
+        public int Increment
+        {
+            get => _increment;
+            set => _increment = value;
+        }
+
         public int WhiteTimeSeconds
         {
             get => _whiteTimeSeconds;
@@ -59,6 +138,22 @@ namespace ChessClock.ViewModels
                 _whiteTimeSeconds = value;
 
                 //WhiteTimeSecondsShow = (_whiteTimeSeconds==0 || _whiteTimeSeconds == 60) ? "00" : _whiteTimeSeconds.ToString();
+
+                if (_whiteTimeSeconds == 60)
+                {
+                    WhiteTimeSecondsShow = "00";
+                }
+                else if (_whiteTimeSeconds < 10)
+                {
+                    WhiteTimeSecondsShow = "0" + _whiteTimeSeconds.ToString();
+                }
+                else
+                {
+                    WhiteFinalCountDown = false;
+                    WhiteTimeSecondsShow = _whiteTimeSeconds.ToString();
+                }
+                    
+
 
                 OnPropertyChanged();
             }
@@ -107,6 +202,19 @@ namespace ChessClock.ViewModels
             set
             {
                 _blackTimeSeconds = value;
+                if (_blackTimeSeconds == 60)
+                {
+                    BlackTimeSecondsShow = "00";
+                }
+                else if (_blackTimeSeconds < 10)
+                {
+                    BlackTimeSecondsShow = "0" + _blackTimeSeconds.ToString();
+                }
+                else
+                {
+                    BlackFinalCountDown = false;
+                    BlackTimeSecondsShow = _blackTimeSeconds.ToString();
+                }
                 OnPropertyChanged();
             }
         }
@@ -216,40 +324,63 @@ namespace ChessClock.ViewModels
         #region Methods
         private bool HandleWhiteTime()
         {
-            whiteTimeProgress ++;
+            
             if (!_whiteTimerRun || Reset || Pause) 
             {
-                
+                //whiteTimeProgress = 0;
+                if (Reset || Pause)
+                {
+                    whiteTimeProgress = 0;
+                }
                 return false;
                 
             }
+            whiteTimeProgress++;
 
             if (whiteTimeProgress==10)
             {
+
+                WhiteTimeSeconds--;
+                
+                
                 
 
-                if (WhiteTimeMinutes == 0 && WhiteTimeSeconds == 0)
+                if (WhiteTimeMinutes == 0)
                 {
-                    //return new Task<false>;
-                    whiteTimeProgress = 0;
-                    return false;
+                    
+                    //When the last few seconds arrives, highlight
+
+                    if (WhiteTimeSeconds == 0)
+                    {
+                        whiteTimeProgress = 0;
+                        //WhiteTimeSecondsShow = "00";
+                        GameOverState();
+                        return false;
+                    }
+
+                    if (WhiteTimeSeconds <= 10)
+                    {
+                        //WhiteBackgroundColor = Color.OrangeRed;
+                        WhiteFinalCountDown = true;
+                    }
+                    
 
                 }
 
-                WhiteTimeSeconds--;
+                
                 if (WhiteTimeSeconds == 0)
                 {
                     WhiteTimeSeconds = 60;
-                    WhiteTimeSecondsShow = "00";
+                    //WhiteTimeSecondsShow = "00";
                 }
-                else if(WhiteTimeSeconds<10)
-                {
-                    WhiteTimeSecondsShow = "0"+WhiteTimeSeconds;
-                }
-                else
-                {
-                    WhiteTimeSecondsShow = WhiteTimeSeconds.ToString();
-                }
+                //else if(WhiteTimeSeconds<10)
+                //{
+                //    WhiteTimeSecondsShow = "0"+WhiteTimeSeconds;
+                //}
+                //else
+                //{
+                //    WhiteTimeSecondsShow = WhiteTimeSeconds.ToString();
+                //}
 
                 if (WhiteTimeSeconds == 59)
                 {
@@ -265,43 +396,73 @@ namespace ChessClock.ViewModels
             return true;
         }
 
+        private void GameOverState()
+        {
+            Pause = true;
+            //Reset = false;
+
+            WhiteBackgroundColor = Color.DarkSeaGreen;
+            WhiteIsEnabled = false;
+            BlackIsEnabled = false;
+            BlackBackgroundColor = Color.DarkSeaGreen;
+            _whiteTimerRun = false;
+            _blackTimerRun = false;
+        }
+
         private bool HandleBlackTime()
         {
-            blackTimeProgress ++;
+            
             if (!_blackTimerRun || Reset || Pause)
             {
-                blackTimeProgress = 0;
+                if (Reset || Pause)
+                {
+                    blackTimeProgress = 0;
+                }
                 return false;
-                
-
             }
-
+            blackTimeProgress++;
             if (blackTimeProgress == 10)
             {
 
+                BlackTimeSeconds--;
 
-                if (BlackTimeMinutes == 0 && BlackTimeSeconds == 0)
+                if (BlackTimeMinutes == 0)
                 {
                     //return new Task<false>;
-                    blackTimeProgress = 0;
-                    return false;
+                    //When the last few seconds arrives, highlight
+
+                    if (BlackTimeSeconds == 0)
+                    {
+                        blackTimeProgress = 0;
+                        //BlackTimeSecondsShow = "00";
+                        GameOverState();
+                        return false;
+                    }
+
+                    if (BlackTimeSeconds <= 10)
+                    {
+                        //BlackBackgroundColor = Color.OrangeRed;
+                        BlackFinalCountDown = true;
+                    }
+
+
 
                 }
 
-                BlackTimeSeconds--;
+                
                 if (BlackTimeSeconds == 0)
                 {
                     BlackTimeSeconds = 60;
-                    BlackTimeSecondsShow = "00";
+                    //BlackTimeSecondsShow = "00";
                 }
-                else if (BlackTimeSeconds<10)
-                {
-                    BlackTimeSecondsShow = "0"+BlackTimeSeconds;
-                }
-                else
-                {
-                    BlackTimeSecondsShow = BlackTimeSeconds.ToString();
-                }
+                //else if (BlackTimeSeconds<10)
+                //{
+                //    BlackTimeSecondsShow = "0"+BlackTimeSeconds;
+                //}
+                //else
+                //{
+                //    BlackTimeSecondsShow = BlackTimeSeconds.ToString();
+                //}
 
                 if (BlackTimeSeconds == 59)
                 {
@@ -321,11 +482,27 @@ namespace ChessClock.ViewModels
         {
             Pause = false;
             Reset = false;
-            
-            WhiteBackgroundColor = Color.Bisque;
+            HandleWhiteIncrement();
+            if (!WhiteFinalCountDown)
+            {
+                WhiteBackgroundColor = nonCountDownClickedColor;
+            }
+            else
+            {
+                WhiteBackgroundColor = countDownClickedColor;
+            }
+
+            if (!BlackFinalCountDown)
+            {
+                BlackBackgroundColor = nonCountDownRunningColor;
+            }
+            else
+            {
+                BlackBackgroundColor = countDownRunningColor;
+            }
+
             WhiteIsEnabled = false;
             BlackIsEnabled = true;
-            BlackBackgroundColor = Color.Beige;
             _whiteTimerRun = false;
             _blackTimerRun = true;
             //Device.StartTimer(TimeSpan.FromMilliseconds(100), () =>
@@ -337,6 +514,9 @@ namespace ChessClock.ViewModels
             //    });
             //    return true;
             //});
+            //HandleIncrement(ref _whiteTimeSeconds, Increment);
+            
+            //WhiteTimeSecondsShow = WhiteTimeSeconds.ToString();
             Device.StartTimer(TimeSpan.FromMilliseconds(100),HandleBlackTime );
         }
 
@@ -344,9 +524,26 @@ namespace ChessClock.ViewModels
         {
             Pause = false;
             Reset = false;
-            
-            BlackBackgroundColor = Color.Bisque;
-            WhiteBackgroundColor = Color.Beige;
+            HandleBlackIncrement();
+
+            if (!BlackFinalCountDown)
+            {
+                BlackBackgroundColor = nonCountDownClickedColor;
+            }
+            else
+            {
+                BlackBackgroundColor = countDownClickedColor;
+            }
+
+            if (!WhiteFinalCountDown)
+            {
+                WhiteBackgroundColor = nonCountDownRunningColor;
+            }
+            else
+            {
+                WhiteBackgroundColor = countDownRunningColor;
+            }
+
             BlackIsEnabled = false;
             WhiteIsEnabled = true;
             _blackTimerRun = false;
@@ -360,7 +557,29 @@ namespace ChessClock.ViewModels
             //    });
             //    return true;
             //});
+
+            //When Increment was generally handled for both colors
+            //HandleIncrement(ref _blackTimeSeconds,Increment);
+
+            
+
+            //BlackTimeSecondsShow = BlackTimeSeconds.ToString();
             Device.StartTimer(TimeSpan.FromMilliseconds(100), HandleWhiteTime);
+        }
+
+        //private void HandleIncrement(ref int timeSecond,int increment)
+        //{
+        //     timeSecond += increment;
+        //}
+
+        private void HandleWhiteIncrement()
+        {
+            WhiteTimeSeconds += Increment;
+        }
+
+        private void HandleBlackIncrement()
+        {
+            BlackTimeSeconds += Increment;
         }
 
 
@@ -373,6 +592,8 @@ namespace ChessClock.ViewModels
         public ICommand PauseTimeCommand { private set; get; }
         public ICommand OnBlackTappedCommand { get; set; }
         public ICommand OnWhiteTappedCommand { get; set; }
+
+        
         #endregion
 
         #region Constructor
@@ -383,8 +604,8 @@ namespace ChessClock.ViewModels
                 new TimeControl
                 {
                     Index = 0,
-                    Limit = 1,
-                    Increment = 0,
+                    Limit = 0,
+                    Increment = 2,
                     Description = "Bullet 1|0"
                 },
                 new TimeControl
@@ -433,22 +654,43 @@ namespace ChessClock.ViewModels
 
             SelectedTimeControl = TimeControls[0];
 
+            //For Real Time
+            Increment = SelectedTimeControl.Increment;
             WhiteTimeMinutes = SelectedTimeControl.Limit;
-            WhiteTimeSeconds = 60;
-            WhiteTimeSecondsShow = "00";
+            WhiteTimeSeconds = 15;
+            //WhiteTimeSecondsShow = "00";
             BlackTimeMinutes = SelectedTimeControl.Limit;
-            BlackTimeSeconds = 60;
-            BlackTimeSecondsShow = "00";
-            BlackBackgroundColor = Color.Beige;
-            WhiteBackgroundColor = Color.Beige;
+            BlackTimeSeconds = 15;
+            //BlackTimeSecondsShow = "00";
+
+            //For Last Few Seconds Testing
+            //Increment = 2;
+
+            //WhiteTimeMinutes = 0;
+            //WhiteTimeSeconds = 15;
+            ////WhiteTimeSecondsShow = "15";
+            //BlackTimeMinutes = 0;
+            //BlackTimeSeconds = 15;
+            ////BlackTimeSecondsShow = "15";
+
+
+            BlackBackgroundColor = nonCountDownRunningColor;
+            WhiteBackgroundColor = nonCountDownRunningColor;
             WhiteIsEnabled = true;
             BlackIsEnabled = true;
             Reset = false;
             Pause = true;
+            WhiteFinalCountDown = false;
+            BlackFinalCountDown = false;
 
 
             SelectTimeControlCommand = new Command(
-                (chosenTimeControl) => { SelectedTimeControl = this.TimeControls.First(x => x.Index == Int32.Parse(chosenTimeControl.ToString())); }
+                (chosenTimeControl) =>
+                {
+                    var chosenTime = Int32.Parse(chosenTimeControl.ToString())==-1? SelectedTimeControl.Index:Int32
+                        .Parse(chosenTimeControl.ToString());
+                    SelectedTimeControl = this.TimeControls.First(x => x.Index == chosenTime);
+                }
 
                 );
 
@@ -465,6 +707,7 @@ namespace ChessClock.ViewModels
                     BlackIsEnabled = true;
                 });
 
+
             OnWhiteTappedCommand = new Command(() => OnWhite_Tapped());
             OnBlackTappedCommand = new Command(() => OnBlack_Tapped());
 
@@ -472,22 +715,38 @@ namespace ChessClock.ViewModels
 
         private void ResetTime()
         {
+            //Real Time testing
             WhiteTimeMinutes = SelectedTimeControl.Limit;
-            WhiteTimeSeconds = 60;
+            WhiteTimeSeconds = 15;
             whiteTimeProgress = 0;
-            WhiteTimeSecondsShow = "00";
-            
 
             BlackTimeMinutes = SelectedTimeControl.Limit;
-            BlackTimeSeconds = 60;
+            BlackTimeSeconds = 15;
             blackTimeProgress = 0;
-            BlackTimeSecondsShow = "00";
             
 
-            WhiteBackgroundColor = Color.Beige;
-            BlackBackgroundColor = Color.Beige;
+            //Last few seconds testing
+            //WhiteTimeMinutes = 0;
+            //WhiteTimeSeconds = 15;
+            //whiteTimeProgress = 0;
+            //WhiteTimeSecondsShow = "15";
+
+
+            //BlackTimeMinutes = 0;
+            //BlackTimeSeconds = 15;
+            //blackTimeProgress = 0;
+            //BlackTimeSecondsShow = "15";
+
+
+            WhiteBackgroundColor = nonCountDownRunningColor;
+            BlackBackgroundColor = nonCountDownRunningColor;
             WhiteIsEnabled = true;
             BlackIsEnabled = true;
+
+            whiteTimeProgress = 0;
+            blackTimeProgress = 0;
+            WhiteFinalCountDown = false;
+            BlackFinalCountDown = false;
 
             Pause = true;
             Reset = true;
