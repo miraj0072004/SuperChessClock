@@ -137,15 +137,27 @@ namespace ChessClock.ViewModels
             {
                 _whiteTimeSeconds = value;
 
-                //WhiteTimeSecondsShow = (_whiteTimeSeconds==0 || _whiteTimeSeconds == 60) ? "00" : _whiteTimeSeconds.ToString();
+                //WhiteTimeSecondsShow = (_whiteTimeSeconds==0 || _whiteTimeSeconds == 15) ? "00" : _whiteTimeSeconds.ToString();
 
-                if (_whiteTimeSeconds == 60)
+                if (_whiteTimeSeconds == 15)
                 {
                     WhiteTimeSecondsShow = "00";
                 }
-                else if (_whiteTimeSeconds < 10)
+                //else
+                if (_whiteTimeSeconds < 10)
                 {
                     WhiteTimeSecondsShow = "0" + _whiteTimeSeconds.ToString();
+
+                    if (_whiteTimeSeconds == 0)
+                    {
+                        if (WhiteTimeMinutes !=0)
+                        {
+                            _whiteTimeSeconds = 15;
+                        }
+                        
+                        //WhiteTimeSecondsShow = "00";
+                    }
+                        
                 }
                 else
                 {
@@ -202,13 +214,21 @@ namespace ChessClock.ViewModels
             set
             {
                 _blackTimeSeconds = value;
-                if (_blackTimeSeconds == 60)
+                if (_blackTimeSeconds == 15)
                 {
                     BlackTimeSecondsShow = "00";
                 }
-                else if (_blackTimeSeconds < 10)
+                //else
+                if (_blackTimeSeconds < 10)
                 {
                     BlackTimeSecondsShow = "0" + _blackTimeSeconds.ToString();
+
+                    if (_blackTimeSeconds==0)
+                    {
+                        if(BlackTimeMinutes != 0)
+                            _blackTimeSeconds = 15;
+                        //BlackTimeSecondsShow = "00";
+                    }
                 }
                 else
                 {
@@ -328,7 +348,8 @@ namespace ChessClock.ViewModels
             if (!_whiteTimerRun || Reset || Pause) 
             {
                 //whiteTimeProgress = 0;
-                if (Reset || Pause)
+                //if (Reset || Pause)
+                if (Reset)
                 {
                     whiteTimeProgress = 0;
                 }
@@ -341,9 +362,6 @@ namespace ChessClock.ViewModels
             {
 
                 WhiteTimeSeconds--;
-                
-                
-                
 
                 if (WhiteTimeMinutes == 0)
                 {
@@ -366,13 +384,9 @@ namespace ChessClock.ViewModels
                     
 
                 }
-
                 
-                if (WhiteTimeSeconds == 0)
-                {
-                    WhiteTimeSeconds = 60;
-                    //WhiteTimeSecondsShow = "00";
-                }
+                
+
                 //else if(WhiteTimeSeconds<10)
                 //{
                 //    WhiteTimeSecondsShow = "0"+WhiteTimeSeconds;
@@ -382,7 +396,7 @@ namespace ChessClock.ViewModels
                 //    WhiteTimeSecondsShow = WhiteTimeSeconds.ToString();
                 //}
 
-                if (WhiteTimeSeconds == 59)
+                if (WhiteTimeSeconds == 14 && WhiteTimeMinutes !=0)
                 {
                     WhiteTimeMinutes--;
                 }
@@ -414,7 +428,7 @@ namespace ChessClock.ViewModels
             
             if (!_blackTimerRun || Reset || Pause)
             {
-                if (Reset || Pause)
+                if (Reset)
                 {
                     blackTimeProgress = 0;
                 }
@@ -452,7 +466,7 @@ namespace ChessClock.ViewModels
                 
                 if (BlackTimeSeconds == 0)
                 {
-                    BlackTimeSeconds = 60;
+                    BlackTimeSeconds = 15;
                     //BlackTimeSecondsShow = "00";
                 }
                 //else if (BlackTimeSeconds<10)
@@ -464,7 +478,7 @@ namespace ChessClock.ViewModels
                 //    BlackTimeSecondsShow = BlackTimeSeconds.ToString();
                 //}
 
-                if (BlackTimeSeconds == 59)
+                if (BlackTimeSeconds == 14 && BlackTimeMinutes != 0)
                 {
                     BlackTimeMinutes--;
                 }
@@ -574,12 +588,38 @@ namespace ChessClock.ViewModels
 
         private void HandleWhiteIncrement()
         {
-            WhiteTimeSeconds += Increment;
+            if ((WhiteTimeSeconds + Increment)>=15)
+            {
+                if (WhiteTimeSeconds!=15)
+                {
+                    WhiteTimeMinutes++;
+                }
+                WhiteTimeSeconds = WhiteTimeSeconds + Increment - 15;
+                
+            }
+            else
+            {
+                WhiteTimeSeconds += Increment;
+            }
+            
         }
 
         private void HandleBlackIncrement()
         {
-            BlackTimeSeconds += Increment;
+            
+            if ((BlackTimeSeconds + Increment) >= 15)
+            {
+                if (BlackTimeSeconds != 15)
+                {
+                    BlackTimeMinutes++;
+                }
+                BlackTimeSeconds = BlackTimeSeconds + Increment - 15;
+                
+            }
+            else
+            {
+                BlackTimeSeconds += Increment;
+            }
         }
 
 
@@ -657,10 +697,10 @@ namespace ChessClock.ViewModels
             //For Real Time
             Increment = SelectedTimeControl.Increment;
             WhiteTimeMinutes = SelectedTimeControl.Limit;
-            WhiteTimeSeconds = 15;
+            WhiteTimeSeconds = 14;
             //WhiteTimeSecondsShow = "00";
             BlackTimeMinutes = SelectedTimeControl.Limit;
-            BlackTimeSeconds = 15;
+            BlackTimeSeconds = 14;
             //BlackTimeSecondsShow = "00";
 
             //For Last Few Seconds Testing
@@ -717,11 +757,11 @@ namespace ChessClock.ViewModels
         {
             //Real Time testing
             WhiteTimeMinutes = SelectedTimeControl.Limit;
-            WhiteTimeSeconds = 15;
+            WhiteTimeSeconds = 14;
             whiteTimeProgress = 0;
 
             BlackTimeMinutes = SelectedTimeControl.Limit;
-            BlackTimeSeconds = 15;
+            BlackTimeSeconds = 14;
             blackTimeProgress = 0;
             
 
