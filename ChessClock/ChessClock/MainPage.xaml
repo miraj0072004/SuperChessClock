@@ -4,8 +4,12 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
+             xmlns:local ="clr-namespace:ButtonCircle.FormsPlugin.Abstractions;assembly=ButtonCircle.FormsPlugin.Abstractions"
+             xmlns:extensions="clr-namespace:ChessClock.Extensions;assembly=ChessClock"
+             xmlns:abstractions="clr-namespace:ButtonCircle.FormsPlugin.Abstractions;assembly=ButtonCircle.FormsPlugin.Abstractions"
              x:Class="ChessClock.MainPage"
              BindingContext="{StaticResource ClockViewModel}"
+             BackgroundImageSource="{extensions:ImageResource ChessClock.Images.bgImage1.jpg}"
              x:Name="MyPage">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -14,74 +18,152 @@
     </ContentPage.Resources>
 
     
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="5*"/>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="5*"/>
         </Grid.RowDefinitions>
-        <Frame Grid.Row="0" BackgroundColor="{Binding WhiteBackgroundColor}" IsEnabled="{Binding WhiteIsEnabled}" CornerRadius="20" x:Name="WhiteFrame">
-            <Frame.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding OnWhiteTappedCommand}"/>
-            </Frame.GestureRecognizers>
-            <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal">
-                <Label x:Name="whiteMinuteLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding WhiteTimeMinutes}">
-                    <!--<Label.Triggers>
-                        <Trigger TargetType="Label" Property="Text" Value="0">
-                            <Setter Property="Text" Value="00"/>
-                        </Trigger>
-                    </Label.Triggers>-->
-                </Label>
-                <Label x:Name="whiteSecondLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding WhiteTimeSecondsShow}">
-                    <!--<Label.Triggers>
-                        <DataTrigger TargetType="Label" Binding="{Binding WhiteTimeSeconds}" Value="0">
-                            <Setter Property="Text" Value="00"/>
-                        </DataTrigger>
-                    </Label.Triggers>-->
-                </Label>
-            </StackLayout>
-        </Frame>
-        <Grid Grid.Row="1" HorizontalOptions="Center">
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="9*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="12*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Frame Grid.Column="1" Grid.Row="1"  BackgroundColor="{Binding WhiteBackgroundColor}" IsEnabled="{Binding WhiteIsEnabled}" CornerRadius="90" x:Name="WhiteFrame">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OnWhiteTappedCommand}"/>
+                </Frame.GestureRecognizers>
+
+                    <StackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal">
+                        <Label x:Name="whiteMinuteLabel"  FontSize="100" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding WhiteTimeMinutes}"></Label>
+                        <Label VerticalOptions="Center" FontSize="100"  HorizontalOptions="Center" Text=":" ></Label>
+                        <Label x:Name="whiteSecondLabel"  FontSize="100" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding WhiteTimeSecondsShow}"></Label>
+
+                    </StackLayout>
+            </Frame>
+        </Grid>
+        <!--<Grid Grid.Row="1" HorizontalOptions="CenterAndExpand">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Text="Settings" Grid.Column="0" VerticalOptions="Center" Clicked="SettingsButton_OnClicked"></Button>
-            <Button Text="Pause" Grid.Column="1" VerticalOptions="Center" Command="{Binding PauseTimeCommand}">
+            --><!--<Button Text="Settings" Grid.Column="0" HorizontalOptions="Center"  Clicked="SettingsButton_OnClicked" WidthRequest="20" HeightRequest="20" CornerRadius="10"></Button>-->
+            
+            <!--<Button Text="Pause" Grid.Column="1" VerticalOptions="Center" Command="{Binding PauseTimeCommand}">
                 <Button.Triggers>
                     <DataTrigger TargetType="Button" Binding="{Binding Pause}" Value="true">
                         <Setter Property="IsEnabled" Value="false"></Setter>
                     </DataTrigger>
                 </Button.Triggers>
             </Button>
-            <Button Text="Restart" Grid.Column="2" VerticalOptions="Center" Command="{Binding ResetTimeCommand}"></Button>
-        </Grid>
-        <Frame Grid.Row="2" BackgroundColor="{Binding BlackBackgroundColor}" IsEnabled="{Binding BlackIsEnabled}" CornerRadius="10" x:Name="BlackFrame">
-            <Frame.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding OnBlackTappedCommand}"/>
-            </Frame.GestureRecognizers>
-            <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal">
-                <Label x:Name="blackMinuteLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding BlackTimeMinutes}">
-                    <!--<Label.Triggers>
+            <Button Text="Restart" Grid.Column="2" VerticalOptions="Center" Command="{Binding ResetTimeCommand}"></Button>--><!--
+           
+                <local:CircleButton FontIcon="Material"
+                                    Grid.Column="0"
+                                    Icon="md-settings" 
+                                    FontSize="40" TextColor="Black" 
+                                    HeightRequest="70" WidthRequest="70" 
+                                    BorderThickness="5" BorderColor="Black" 
+                                    BackgroundColor="Gold"
+                                    Clicked="SettingsButton_OnClicked"></local:CircleButton>
+                <local:CircleButton FontIcon="Material"
+                                    Grid.Column="1"
+                                    Icon="md-pause" 
+                                    FontSize="40" TextColor="Black" 
+                                    HeightRequest="70" WidthRequest="70" 
+                                    BorderThickness="5" BorderColor="Black" 
+                                    BackgroundColor="Gold" Command="{Binding PauseTimeCommand}">
+                    <local:CircleButton.Triggers>
+                        <DataTrigger TargetType="local:CircleButton" Binding="{Binding Pause}" Value="true">
+                            <Setter Property="IsEnabled" Value="false"></Setter>
+                        </DataTrigger>
+                    </local:CircleButton.Triggers>
+                </local:CircleButton>
+                <local:CircleButton FontIcon="Material"
+                                    Grid.Column="2"
+                                    Icon="md-autorenew" 
+                                    FontSize="40" TextColor="Black" 
+                                    HeightRequest="70" WidthRequest="70" 
+                                    BorderThickness="5" BorderColor="Black" 
+                                    BackgroundColor="Gold" Command="{Binding ResetTimeCommand}"></local:CircleButton>
+            
+
+        </Grid>-->
+        <StackLayout Grid.Row="1" Orientation="Horizontal">
+            <local:CircleButton FontIcon="Material"
+                                HorizontalOptions="CenterAndExpand"
+                                Icon="md-settings" 
+                                FontSize="40" TextColor="Black" 
+                                HeightRequest="70" WidthRequest="70" 
+                                BorderThickness="5" BorderColor="Black" 
+                                BackgroundColor="Gold"
+                                Clicked="SettingsButton_OnClicked"></local:CircleButton>
+            <local:CircleButton FontIcon="Material"
+                                HorizontalOptions="CenterAndExpand"
+                                Icon="md-pause" 
+                                FontSize="40" TextColor="Black" 
+                                HeightRequest="70" WidthRequest="70" 
+                                BorderThickness="5" BorderColor="Black" 
+                                BackgroundColor="Gold" Command="{Binding PauseTimeCommand}">
+                <local:CircleButton.Triggers>
+                    <DataTrigger TargetType="local:CircleButton" Binding="{Binding Pause}" Value="true">
+                        <Setter Property="IsEnabled" Value="false"></Setter>
+                    </DataTrigger>
+                </local:CircleButton.Triggers>
+            </local:CircleButton>
+            <local:CircleButton FontIcon="Material"
+                                HorizontalOptions="CenterAndExpand"
+                                Icon="md-autorenew" 
+                                FontSize="40" TextColor="Black" 
+                                HeightRequest="70" WidthRequest="70" 
+                                BorderThickness="5" BorderColor="Black" 
+                                BackgroundColor="Gold" Command="{Binding ResetTimeCommand}"></local:CircleButton>
+        </StackLayout>
+        
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="9*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="12*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="{Binding BlackBackgroundColor}" IsEnabled="{Binding BlackIsEnabled}" CornerRadius="90" x:Name="BlackFrame">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OnBlackTappedCommand}"/>
+                </Frame.GestureRecognizers>
+                <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal">
+                    <Label x:Name="blackMinuteLabel" FontSize="100" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding BlackTimeMinutes}">
+                        <!--<Label.Triggers>
                         <DataTrigger TargetType="Label" Binding="{Binding BlackTimeMinutes}" Value="0">
                             <Setter Property="Text" Value="00"/>
                         </DataTrigger>
                     </Label.Triggers>-->
-                </Label>
-                <Label x:Name="blackSecondLabel" FontSize="Large" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding BlackTimeSecondsShow}">
-                    <!--<Label.Triggers>
+                    </Label>
+                    <Label VerticalOptions="Center" FontSize="100"  HorizontalOptions="Center" Text=":" ></Label>
+                    <Label x:Name="blackSecondLabel" FontSize="100" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding BlackTimeSecondsShow}">
+                        <!--<Label.Triggers>
                         <DataTrigger TargetType="Label" Binding="{Binding BlackTimeSeconds}" Value="0">
                             <Setter Property="Text" Value="00"/>
                         </DataTrigger>
                     </Label.Triggers>-->
-                </Label>
-            </StackLayout>
-        </Frame>
-        
-            
-        
+                    </Label>
+                </StackLayout>
+            </Frame>
+        </Grid>
     </Grid>
 
 </ContentPage>

@@ -49,10 +49,11 @@ namespace ChessClock.ViewModels
 
         #region Properties
 
-        private readonly Color nonCountDownRunningColor = Color.Beige;
-        private readonly Color nonCountDownClickedColor = Color.Bisque;
+        private readonly Color nonCountDownRunningColor = Color.Gold;
+        private readonly Color nonCountDownClickedColor = Color.Goldenrod;
         private readonly Color countDownRunningColor = Color.OrangeRed;
         private readonly Color countDownClickedColor = Color.Chocolate;
+        private readonly Color pausedColor = Color.Aquamarine;
 
         public bool BlackFinalCountDown
         {
@@ -326,7 +327,11 @@ namespace ChessClock.ViewModels
         public bool Reset
         {
             get => _reset;
-            set => _reset = value;
+            set
+            {
+                _reset = value;
+                OnPropertyChanged();
+            }
         }
 
         public bool Pause
@@ -741,8 +746,8 @@ namespace ChessClock.ViewModels
                 () =>
                 {
                     Pause = true;
-                    WhiteBackgroundColor=Color.Aquamarine;
-                    BlackBackgroundColor=Color.Aquamarine;
+                    WhiteBackgroundColor= pausedColor;
+                    BlackBackgroundColor= pausedColor;
                     WhiteIsEnabled = true;
                     BlackIsEnabled = true;
                 });
@@ -763,7 +768,9 @@ namespace ChessClock.ViewModels
             BlackTimeMinutes = SelectedTimeControl.Limit;
             BlackTimeSeconds = 14;
             blackTimeProgress = 0;
-            
+
+
+
 
             //Last few seconds testing
             //WhiteTimeMinutes = 0;
@@ -776,10 +783,13 @@ namespace ChessClock.ViewModels
             //BlackTimeSeconds = 15;
             //blackTimeProgress = 0;
             //BlackTimeSecondsShow = "15";
+            _whiteTimerRun = false;
+            _blackTimerRun = false;
 
 
-            WhiteBackgroundColor = nonCountDownRunningColor;
-            BlackBackgroundColor = nonCountDownRunningColor;
+            //WhiteBackgroundColor = nonCountDownClickedColor;
+            //BlackBackgroundColor = nonCountDownClickedColor;
+            
             WhiteIsEnabled = true;
             BlackIsEnabled = true;
 
