@@ -11,6 +11,10 @@ namespace ChessClock
             InitializeComponent();
 
             MainPage = new MainPage();
+
+            Plugin.Iconize.Iconize.With(new Plugin.Iconize.Fonts.MaterialModule())
+                                  .With(new Plugin.Iconize.Fonts.MaterialDesignIconsModule())
+                                  .With(new Plugin.Iconize.Fonts.FontAwesomeRegularModule());
         }
 
         protected override void OnStart()

@@ -650,50 +650,67 @@ namespace ChessClock.ViewModels
                 {
                     Index = 0,
                     Limit = 0,
-                    Increment = 2,
-                    Description = "Bullet 1|0"
+                    Increment = 0,
+                    //Description = "Bullet 1|0"
+                    Description = "1|0"
                 },
                 new TimeControl
                 {
                     Index = 1,
-                    Limit = 3,
-                    Increment = 0,
-                    Description = "Blitz 3|0"
+                    Limit = 1,
+                    Increment = 1,
+                    Description = "1|1"
                 },
                 new TimeControl
                 {
                     Index = 2,
-                    Limit = 5,
+                    Limit = 3,
                     Increment = 0,
-                    Description = "Blitz 5|0"
+                    //Description = "Blitz 3|0"
+                    Description = "3|0"
                 },
                 new TimeControl
                 {
                     Index = 3,
-                    Limit = 10,
-                    Increment = 0,
-                    Description = "Rapid 15|0"
+                    Limit = 3,
+                    Increment = 2,
+                    Description = "3|2"
                 },
                 new TimeControl
                 {
                     Index = 4,
-                    Limit = 3,
-                    Increment = 2,
-                    Description = "Blitz 3|2"
+                    Limit = 5,
+                    Increment = 0,
+                    Description = "5|0"
                 },
                 new TimeControl
                 {
                     Index = 5,
                     Limit = 5,
                     Increment = 5,
-                    Description = "Blitz 5|5"
+                    Description = "5|5"
                 },
                 new TimeControl
                 {
                     Index = 6,
                     Limit = 15,
                     Increment = 10,
-                    Description = "Rapid 15|10"
+                    //Description = "Rapid 15|10"
+                    Description = "15|10"
+                },
+                new TimeControl
+                {
+                    Index = 7,
+                    Limit = 25,
+                    Increment = 0,
+                    Description = "25|0"
+                },
+                new TimeControl
+                {
+                    Index = 8,
+                    Limit = 25,
+                    Increment = 10,
+                    Description = "25|10"
                 }
             };
 

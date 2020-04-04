@@ -8,6 +8,7 @@ using Android.Widget;
 using Android.OS;
 using ButtonCircle.FormsPlugin.Droid;
 
+
 namespace ChessClock.Droid
 {
     [Activity(Label = "ChessClock", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
@@ -19,9 +20,12 @@ namespace ChessClock.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
-            Plugin.InputKit.Platforms.Droid.Config.Init(this, savedInstanceState); // < ---- Add here    
+            Plugin.InputKit.Platforms.Droid.Config.Init(this, savedInstanceState); // < ---- Add here 
+            
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+
+            Plugin.Iconize.Iconize.Init(Resource.Id.toolbar, Resource.Id.sliding_tabs); // <-- Iconize
             ButtonCircleRenderer.Init();
             LoadApplication(new App());
         }

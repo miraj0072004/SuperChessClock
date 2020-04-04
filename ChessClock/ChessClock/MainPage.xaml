@@ -6,7 +6,6 @@
              mc:Ignorable="d"
              xmlns:local ="clr-namespace:ButtonCircle.FormsPlugin.Abstractions;assembly=ButtonCircle.FormsPlugin.Abstractions"
              xmlns:extensions="clr-namespace:ChessClock.Extensions;assembly=ChessClock"
-             xmlns:abstractions="clr-namespace:ButtonCircle.FormsPlugin.Abstractions;assembly=ButtonCircle.FormsPlugin.Abstractions"
              x:Class="ChessClock.MainPage"
              BindingContext="{StaticResource ClockViewModel}"
              BackgroundImageSource="{extensions:ImageResource ChessClock.Images.bgImage1.jpg}"
