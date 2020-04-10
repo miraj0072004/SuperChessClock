@@ -5,10 +5,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              xmlns:local ="clr-namespace:ButtonCircle.FormsPlugin.Abstractions;assembly=ButtonCircle.FormsPlugin.Abstractions"
+             xmlns:f9p="clr-namespace:Forms9Patch;assembly=Forms9Patch"
              xmlns:extensions="clr-namespace:ChessClock.Extensions;assembly=ChessClock"
+             xmlns:iconize="clr-namespace:Plugin.Iconize;assembly=Plugin.Iconize"
              x:Class="ChessClock.MainPage"
              BindingContext="{StaticResource ClockViewModel}"
-             BackgroundImageSource="{extensions:ImageResource ChessClock.Images.bgImage1.jpg}"
+             BackgroundImageSource="{extensions:ImageResource ChessClock.Images.bgImage1_1.jpg}"
              x:Name="MyPage">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -35,17 +37,34 @@
                 <RowDefinition Height="12*"></RowDefinition>
                 <RowDefinition Height="1*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Frame Grid.Column="1" Grid.Row="1"  BackgroundColor="{Binding WhiteBackgroundColor}" IsEnabled="{Binding WhiteIsEnabled}" CornerRadius="90" x:Name="WhiteFrame">
+            <Frame Grid.Column="1" Grid.Row="1"  BackgroundColor="{Binding WhiteBackgroundColor}" IsEnabled="{Binding WhiteIsEnabled}" CornerRadius="90" x:Name="WhiteFrame" Rotation="180">
                 <Frame.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding OnWhiteTappedCommand}"/>
+                    <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped" Command="{Binding OnWhiteTappedCommand}"/>
                 </Frame.GestureRecognizers>
 
-                    <StackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal">
-                        <Label x:Name="whiteMinuteLabel"  FontSize="100" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding WhiteTimeMinutes}"></Label>
-                        <Label VerticalOptions="Center" FontSize="100"  HorizontalOptions="Center" Text=":" ></Label>
-                        <Label x:Name="whiteSecondLabel"  FontSize="100" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding WhiteTimeSecondsShow}"></Label>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="10*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <iconize:IconLabel  Text="md-alarm" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="False">
+                        <iconize:IconLabel.Triggers>
+                            <MultiTrigger TargetType="iconize:IconLabel">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Pause}" Value="True"></BindingCondition>
+                                    <BindingCondition Binding="{Binding WhiteTimerRun}" Value="True"></BindingCondition>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="IsVisible" Value="True"></Setter>
+                            </MultiTrigger>
+                        </iconize:IconLabel.Triggers>
+                    </iconize:IconLabel>
+                    <StackLayout Grid.Row="1" VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal">
+                        <f9p:Label x:Name="whiteMinuteLabel" FontSize="100"  VerticalOptions="Center" HorizontalOptions="CenterAndExpand" Text="{Binding WhiteTimeMinutes}"></f9p:Label>
+                        <f9p:Label VerticalOptions="Center"  FontSize="100" HorizontalOptions="CenterAndExpand" Text=":" ></f9p:Label>
+                        <f9p:Label x:Name="whiteSecondLabel" FontSize="100"  VerticalOptions="Center" HorizontalOptions="CenterAndExpand" Text="{Binding WhiteTimeSecondsShow}"></f9p:Label>
 
                     </StackLayout>
+                </Grid>
             </Frame>
         </Grid>
         <!--<Grid Grid.Row="1" HorizontalOptions="CenterAndExpand">
@@ -104,7 +123,7 @@
                                 FontSize="40" TextColor="Black" 
                                 HeightRequest="70" WidthRequest="70" 
                                 BorderThickness="5" BorderColor="Black" 
-                                BackgroundColor="Gold"
+                                BackgroundColor="{Binding NonCountDownClickedColor}"
                                 Clicked="SettingsButton_OnClicked"></local:CircleButton>
             <local:CircleButton FontIcon="Material"
                                 HorizontalOptions="CenterAndExpand"
@@ -112,7 +131,7 @@
                                 FontSize="40" TextColor="Black" 
                                 HeightRequest="70" WidthRequest="70" 
                                 BorderThickness="5" BorderColor="Black" 
-                                BackgroundColor="Gold" Command="{Binding PauseTimeCommand}">
+                                BackgroundColor="{Binding NonCountDownClickedColor}" Command="{Binding PauseTimeCommand}">
                 <local:CircleButton.Triggers>
                     <DataTrigger TargetType="local:CircleButton" Binding="{Binding Pause}" Value="true">
                         <Setter Property="IsEnabled" Value="false"></Setter>
@@ -125,7 +144,7 @@
                                 FontSize="40" TextColor="Black" 
                                 HeightRequest="70" WidthRequest="70" 
                                 BorderThickness="5" BorderColor="Black" 
-                                BackgroundColor="Gold" Command="{Binding ResetTimeCommand}"></local:CircleButton>
+                                BackgroundColor="{Binding NonCountDownClickedColor}" Command="{Binding ResetTimeCommand}"></local:CircleButton>
         </StackLayout>
         
 
@@ -142,25 +161,33 @@
             </Grid.RowDefinitions>
             <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="{Binding BlackBackgroundColor}" IsEnabled="{Binding BlackIsEnabled}" CornerRadius="90" x:Name="BlackFrame">
                 <Frame.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding OnBlackTappedCommand}"/>
+                    <TapGestureRecognizer Tapped="TapGestureRecognizer_OnTapped" Command="{Binding OnBlackTappedCommand}"/>
                 </Frame.GestureRecognizers>
-                <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal">
-                    <Label x:Name="blackMinuteLabel" FontSize="100" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding BlackTimeMinutes}">
-                        <!--<Label.Triggers>
-                        <DataTrigger TargetType="Label" Binding="{Binding BlackTimeMinutes}" Value="0">
-                            <Setter Property="Text" Value="00"/>
-                        </DataTrigger>
-                    </Label.Triggers>-->
-                    </Label>
-                    <Label VerticalOptions="Center" FontSize="100"  HorizontalOptions="Center" Text=":" ></Label>
-                    <Label x:Name="blackSecondLabel" FontSize="100" VerticalOptions="Center" HorizontalOptions="Center" Text="{Binding BlackTimeSecondsShow}">
-                        <!--<Label.Triggers>
-                        <DataTrigger TargetType="Label" Binding="{Binding BlackTimeSeconds}" Value="0">
-                            <Setter Property="Text" Value="00"/>
-                        </DataTrigger>
-                    </Label.Triggers>-->
-                    </Label>
-                </StackLayout>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="10*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <iconize:IconLabel  Text="md-alarm" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="False">
+                        <iconize:IconLabel.Triggers>
+                            <MultiTrigger TargetType="iconize:IconLabel">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding Pause}" Value="True"></BindingCondition>
+                                    <BindingCondition Binding="{Binding BlackTimerRun}" Value="True"></BindingCondition>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="IsVisible" Value="True"></Setter>
+                            </MultiTrigger>
+                        </iconize:IconLabel.Triggers>
+                    </iconize:IconLabel>
+                    <StackLayout Grid.Row="1" VerticalOptions="Center" HorizontalOptions="Center" Orientation="Horizontal">
+                        <f9p:Label x:Name="blackMinuteLabel" FontSize="100" VerticalOptions="Center" HorizontalOptions="CenterAndExpand" Text="{Binding BlackTimeMinutes}"></f9p:Label>
+                        <f9p:Label VerticalOptions="Center"  FontSize="100"  HorizontalOptions="CenterAndExpand" Text=":" ></f9p:Label>
+                        <f9p:Label x:Name="blackSecondLabel" FontSize="100" VerticalOptions="Center" HorizontalOptions="CenterAndExpand" Text="{Binding BlackTimeSecondsShow}"></f9p:Label>
+                    </StackLayout>
+                </Grid>
+                
+                
             </Frame>
         </Grid>
     </Grid>

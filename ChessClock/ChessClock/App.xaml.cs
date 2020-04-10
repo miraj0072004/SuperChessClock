@@ -1,4 +1,5 @@
 ﻿using System;
+using ChessClock.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -23,6 +24,11 @@ namespace ChessClock
 
         protected override void OnSleep()
         {
+            var viewModel = Application.Current.Resources["ClockViewModel"] as ClockViewModel;
+            if (viewModel != null)
+            {
+                viewModel.PauseTimeCommand.Execute(null);
+            }
         }
 
         protected override void OnResume()
